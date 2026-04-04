@@ -3,14 +3,12 @@ import requests
 import pandas as pd
 import plotly.express as px
 
-# 👥 Customers
 customers = [
     {"name": "Raj", "type": "investor"},
     {"name": "Simran", "type": "jewellery"},
     {"name": "Aman", "type": "premium"}
 ]
 
-# 🏦 Gold Price (LBMA + Live + AUD)
 def get_gold_prices():
     try:
         API_KEY = st.secrets["API_KEY"]  # 🔐 secure
@@ -35,13 +33,11 @@ def get_gold_prices():
         return 7000, 7050
 
 
-# 📈 Chart
 def get_chart_data(price):
     data = [price - i * 15 for i in range(15)]
     return pd.DataFrame({"Price": data[::-1]})
 
 
-# 🤖 CRM Messages
 def generate_message(customer, price, trend):
     name = customer["name"]
     if customer["type"] == "investor":
@@ -52,7 +48,6 @@ def generate_message(customer, price, trend):
         return f"{name}, premium collection available 💎"
 
 
-# 💬 Chatbot
 def chatbot(user_input):
     text = user_input.lower()
 
@@ -66,19 +61,16 @@ def chatbot(user_input):
         return "Ask me about gold, buying, selling, or jewellery 💎"
 
 
-# 🌐 UI
 st.set_page_config(page_title="Jewellery CRM AI", layout="wide")
 
 st.markdown("<h1 style='text-align:center;color:gold;'>💎 Jewellery CRM AI Dashboard</h1>", unsafe_allow_html=True)
 
-# 💰 Prices
 lbma_price, live_price = get_gold_prices()
 
 col1, col2 = st.columns(2)
 col1.metric("🏦 LBMA Price (AUD/oz)", lbma_price)
 col2.metric("📊 Live Price (AUD/oz)", live_price)
 
-# 📊 Market comparison
 diff = live_price - lbma_price
 if diff > 0:
     st.success(f"📈 Market ABOVE LBMA by {round(diff,2)} AUD")
@@ -87,7 +79,6 @@ else:
 
 st.markdown("---")
 
-# 📈 Chart
 st.subheader("📈 Gold Price Trend")
 df = get_chart_data(live_price)
 fig = px.line(df, y="Price")
@@ -95,7 +86,6 @@ st.plotly_chart(fig, use_container_width=True)
 
 st.markdown("---")
 
-# 🤖 CRM
 st.subheader("🤖 CRM AI Agent")
 
 if st.button("Run CRM Agent"):
@@ -118,7 +108,6 @@ if st.button("Run CRM Agent"):
 
 st.markdown("---")
 
-# 💬 Chatbot
 st.subheader("💬 AI Chatbot")
 user_input = st.text_input("Ask something:")
 
@@ -127,6 +116,5 @@ if user_input:
 
 st.markdown("---")
 
-# 👥 Customers
 st.subheader("👥 Customer Database")
 st.table(customers)
